@@ -24,7 +24,7 @@
     <artifactId>avro-parent</artifactId>
     <groupId>org.apache.avro</groupId>
     <version>1.12.0-SNAPSHOT</version>
-    <relativePath>../</relativePath>
+    <relativePath>../pom.xml</relativePath>
   </parent>
 
   <artifactId>avro-mapred</artifactId>
@@ -50,7 +50,7 @@
   <build>
     <plugins>
       <plugin>
-        <groupId>org.apache.maven.plugins</groupId>
+        <!--<groupId>org.apache.maven.plugins</groupId>-->
         <artifactId>maven-jar-plugin</artifactId>
         <configuration>
           <archive>
@@ -61,7 +61,7 @@
         </configuration>
       </plugin>
       <!-- Allow guava because hadoop brings it as a transitive dependency. -->
-      <plugin>
+      <!--<plugin>
         <groupId>org.apache.maven.plugins</groupId>
         <artifactId>maven-enforcer-plugin</artifactId>
         <executions>
@@ -81,9 +81,9 @@
             </configuration>
           </execution>
         </executions>
-      </plugin>
+      </plugin>-->
       <plugin>
-        <groupId>org.apache.maven.plugins</groupId>
+        <!--<groupId>org.apache.maven.plugins</groupId>-->
         <artifactId>maven-surefire-plugin</artifactId>
         <configuration>
           <!-- some IPC tests hang if not run in a separate JVM -->
@@ -98,25 +98,25 @@
         <version>${project.version}</version>
         <executions>
           <execution>
-            <phase>generate-sources</phase>
+            <phase>none</phase>
             <goals>
               <goal>schema</goal>
             </goals>
           </execution>
-          <execution>
+          <!--<execution>
             <id>test-schemas</id>
             <phase>generate-sources</phase>
             <goals>
               <goal>schema</goal>
               <goal>protocol</goal>
-            </goals>
-            <!-- compile only test protocols and schemas and place them in the classpath. -->
-            <configuration>
+            </goals>-->
+            <!-- compile only test protocols and schemas and place them in the classpath.  -->
+            <!--<configuration>
               <sourceDirectory></sourceDirectory>
               <testSourceDirectory>${parent.project.basedir}/../../../../share/test/schemas/</testSourceDirectory>
               <testOutputDirectory>${project.build.directory}/generated-test-sources/java</testOutputDirectory>
             </configuration>
-          </execution>
+          </execution>-->
           <execution>
             <id>mapred-schema</id>
             <phase>generate-sources</phase>

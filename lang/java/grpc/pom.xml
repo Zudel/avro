@@ -91,7 +91,7 @@
         <executions>
           <execution>
             <id>schemas</id>
-            <phase>generate-sources</phase>
+            <phase>none</phase>
             <goals>
               <goal>schema</goal>
               <goal>protocol</goal>
