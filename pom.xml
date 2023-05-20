@@ -84,6 +84,11 @@
 
   <inceptionYear>2009</inceptionYear>
 
+  <properties>
+  <sonar.organization>zudel</sonar.organization>
+  <sonar.host.url>https://sonarcloud.io</sonar.host.url>
+</properties>
+
   <mailingLists>
     <mailingList>
       <name>Avro Developer List</name>

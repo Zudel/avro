@@ -68,7 +68,13 @@
     <javacc-plugin.version>3.0.3</javacc-plugin.version>
     <javacc.version>7.0.12</javacc.version>
     <cyclonedx-maven-plugin.version>2.7.5</cyclonedx-maven-plugin.version>
+    <sonar.organization>zudel</sonar.organization>
+    <sonar.host.url>https://sonarcloud.io</sonar.host.url>
+    
   </properties>
+
+
+
 
   <modules>
     <module>android</module>
@@ -87,6 +93,7 @@
     <module>grpc</module>
     <module>integration-test</module>
     <module>perf</module>
+    <module>jacoco-tests</module>
   </modules>
 
   <build>
