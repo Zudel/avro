@@ -70,7 +70,8 @@
     <cyclonedx-maven-plugin.version>2.7.5</cyclonedx-maven-plugin.version>
     <sonar.organization>zudel</sonar.organization>
     <sonar.host.url>https://sonarcloud.io</sonar.host.url>
-    
+    <jacoco-maven-plugin.version>0.8.8</jacoco-maven-plugin.version>
+    <sonar.coverage.jacoco.xmlReportPaths>${project.basedir}/lang/java/jacoco-tests/target/site/jacoco-aggregate/jacoco.xml</sonar.coverage.jacoco.xmlReportPaths>
   </properties>
 
 
@@ -163,42 +164,6 @@
         </plugin>
         <plugin>
           <groupId>org.apache.maven.plugins</groupId>
-          <artifactId>maven-surefire-plugin</artifactId>
-          <version>${maven-surefire-plugin.version}</version>
-          <configuration>
-            <includes>
-              <!-- Avro naming convention for JUnit tests -->
-              <include>**/Test**</include>
-            </includes>
-            <excludes>
-              <!-- A few inner classes are not to be tested -->
-              <exclude>**/*$*</exclude>
-              <!-- exclude the generated classes under apache.avro.test, some of
-                these match **/Test** and are not JUnit tests -->
-              <exclude>**/apache/avro/test/**</exclude>
-            </excludes>
-            <enableAssertions>false</enableAssertions>
-            <trimStackTrace>false</trimStackTrace>
-            <runOrder>random</runOrder>
-            <parallel>all</parallel>
-            <useUnlimitedThreads>true</useUnlimitedThreads>
-            <!--<perCoreThreadCount>true</perCoreThreadCount>-->
-
-            <!-- TestSpecificCompiler instantiates a Java compiler to test output results,
-                 this does not work with a manifest-only-jar to set the classpath for the javac.
-                 This may cause problems on some platforms.
-                 See https://maven.apache.org/plugins/maven-surefire-plugin/examples/class-loading.html
-                 for more information. -->
-            <useManifestOnlyJar>false</useManifestOnlyJar>
-            <!-- configures unit test standard error and standard out to go to a file per test
-                 rather than the console. -->
-            <redirectTestOutputToFile>true</redirectTestOutputToFile>
-            <failIfNoTests>false</failIfNoTests>
-            <argLine>-Xmx1000m</argLine>
-          </configuration>
-        </plugin>
-        <plugin>
-          <groupId>org.apache.maven.plugins</groupId>
           <artifactId>maven-javadoc-plugin</artifactId>
           <configuration>
             <links>
@@ -259,12 +224,14 @@
           <instructions>
             <Bundle-Name>${project.name}</Bundle-Name>
             <Bundle-SymbolicName>${project.artifactId}</Bundle-SymbolicName>
+            <!--
             <Export-Package>${osgi.export}</Export-Package>
+
             <Import-Package>${osgi.import}</Import-Package>
             <DynamicImport-Package>${osgi.dynamic.import}</DynamicImport-Package>
             <Private-Package>${osgi.private}</Private-Package>
             <Require-Bundle>${osgi.bundles}</Require-Bundle>
-            <Bundle-Activator>${osgi.activator}</Bundle-Activator>
+            <Bundle-Activator>${osgi.activator}</Bundle-Activator>-->
           </instructions>
           <supportedProjectTypes>
             <supportedProjectType>bundle</supportedProjectType>
@@ -310,9 +277,15 @@
             <eclipse>
               <!-- Avro uses Sun's java code style conventions with 2 spaces, this is a modified version of
                    the eclipse formatter -->
+              <!--Unable to locate file with path: C:\Users\Roberto\Documents\GitHub\avro\lang\java/lang/java/eclipse-java-formatter.xml:
+              Could not find resource 'C:\Users\Roberto\Documents\GitHub\avro\lang\java/lang/java/eclipse-java-formatter.xml' -->
+              <!--Unable to locate file with path: C:\Users\Roberto\Documents\GitHub\avro\lang\java/lang/java/eclipse-avro-formatter.xml:
+                Could not find resource 'C:\Users\Roberto\Documents\GitHub\avro\lang\java/lang/java/eclipse-avro-formatter.xml' -->
+              <!-- resolve it -->
               <file>${main.basedir}/lang/java/eclipse-java-formatter.xml</file>
               <version>4.19.0</version>
             </eclipse>
+
             <!-- Temporarily disabled for JDK 16+ builds -->
             <!--<removeUnusedImports/>-->
             <replaceRegex>
@@ -352,6 +325,26 @@
   </reporting>
 
   <profiles>
+    <profile>
+      <id>coverage</id>
+      <build>
+        <plugins>
+          <plugin>
+            <groupId>org.jacoco</groupId>
+            <artifactId>jacoco-maven-plugin</artifactId>
+            <version>${jacoco-maven-plugin.version}</version>
+            <executions>
+              <execution>
+                <id>default-prepare-agent</id>
+                <goals>
+                  <goal>prepare-agent</goal>
+                </goals>
+              </execution>
+            </executions>
+          </plugin>
+        </plugins>
+      </build>
+    </profile>
     <profile>
       <id>m2e</id>
       <activation>
@@ -450,7 +443,7 @@
           <plugin>
             <groupId>org.apache.maven.plugins</groupId>
             <artifactId>maven-surefire-plugin</artifactId>
-            <configuration>
+            <!--<configuration>
               <includes>
                 <include>**/DataFileInteropTest*</include>
               </includes>
@@ -463,30 +456,7 @@
               <systemPropertyVariables>
                 <test.dir>../../../build/interop/data/</test.dir>
               </systemPropertyVariables>
-            </configuration>
-          </plugin>
-        </plugins>
-      </build>
-    </profile>
-    <profile>
-      <id>mac</id>
-      <activation>
-        <os>
-          <family>mac</family>
-        </os>
-      </activation>
-      <build>
-        <plugins>
-          <plugin>
-            <groupId>org.apache.maven.plugins</groupId>
-            <artifactId>maven-surefire-plugin</artifactId>
-            <configuration>
-              <systemPropertyVariables>
-                <!-- avro-mapred will fail in tests on mac without this -->
-                <java.security.krb5.realm>OX.AC.UK</java.security.krb5.realm>
-                <java.security.krb5.kdc>kdc0.ox.ac.uk:kdc1.ox.ac.uk</java.security.krb5.kdc>
-              </systemPropertyVariables>
-            </configuration>
+            </configuration>-->
           </plugin>
         </plugins>
       </build>

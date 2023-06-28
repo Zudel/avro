@@ -1,12 +1,30 @@
 <?xml version="1.0" encoding="UTF-8"?>
+<!--
+   Licensed to the Apache Software Foundation (ASF) under one or more
+   contributor license agreements.  See the NOTICE file distributed with
+   this work for additional information regarding copyright ownership.
+   The ASF licenses this file to You under the Apache License, Version 2.0
+   (the "License"); you may not use this file except in compliance with
+   the License.  You may obtain a copy of the License at
+
+       https://www.apache.org/licenses/LICENSE-2.0
+
+   Unless required by applicable law or agreed to in writing, software
+   distributed under the License is distributed on an "AS IS" BASIS,
+   WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+   See the License for the specific language governing permissions and
+   limitations under the License.
+-->
+
 <project xmlns="http://maven.apache.org/POM/4.0.0"
          xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
          xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
   <modelVersion>4.0.0</modelVersion>
   <parent>
-    <groupId>org.apache.avro</groupId>
     <artifactId>avro-parent</artifactId>
+    <groupId>org.apache.avro</groupId>
     <version>1.12.0-SNAPSHOT</version>
+    <relativePath>../pom.xml</relativePath>
   </parent>
 
   <groupId>org.example</groupId>
@@ -106,9 +124,49 @@
     </dependency>
   </dependencies>
 
+
+
   <build>
     <plugins>
       <plugin>
+        <groupId>com.diffplug.spotless</groupId>
+        <artifactId>spotless-maven-plugin</artifactId>
+        <configuration>
+          <java>
+            <eclipse>
+              <!-- Avro uses Sun's java code style conventions with 2 spaces, this is a modified version of
+                   the eclipse formatter -->
+              <!--Unable to locate file with path: C:\Users\Roberto\Documents\GitHub\avro\lang\java/lang/java/eclipse-java-formatter.xml:
+              Could not find resource 'C:\Users\Roberto\Documents\GitHub\avro\lang\java/lang/java/eclipse-java-formatter.xml' -->
+              <!--Unable to locate file with path: C:\Users\Roberto\Documents\GitHub\avro\lang\java/lang/java/eclipse-avro-formatter.xml:
+                Could not find resource 'C:\Users\Roberto\Documents\GitHub\avro\lang\java/lang/java/eclipse-avro-formatter.xml' -->
+              <!-- resolve it -->
+              <file>${main.basedir}\eclipse-java-formatter.xml</file>
+              <version>4.19.0</version>
+            </eclipse>
+
+            <!-- Temporarily disabled for JDK 16+ builds -->
+            <!--<removeUnusedImports/>-->
+            <replaceRegex>
+              <name>Remove wildcard imports</name>
+              <searchRegex>import\s+[^\*\s]+\*;(\r\n|\r|\n)</searchRegex>
+              <replacement>$1</replacement>
+            </replaceRegex>
+          </java>
+        </configuration>
+        <executions>
+          <execution>
+            <!-- Runs in compile phase to fail fast in case of formatting issues.-->
+            <id>spotless-check</id>
+            <phase>compile</phase>
+            <goals>
+              <goal>check</goal>
+            </goals>
+          </execution>
+        </executions>
+      </plugin>
+      <plugin>
+
         <groupId>org.jacoco</groupId>
         <artifactId>jacoco-maven-plugin</artifactId>
         <executions>
