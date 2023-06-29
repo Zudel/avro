@@ -18,7 +18,6 @@ package org.apache.avro.io;
  * limitations under the License.
  */
 import org.apache.avro.AvroRuntimeException;
-import org.junit.After;
 import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
@@ -26,19 +25,21 @@ import org.junit.runner.RunWith;
 import org.junit.runners.Parameterized;
 
 import java.io.IOException;
+import java.nio.ByteBuffer;
 import java.util.Arrays;
 import java.util.Collection;
-import java.util.logging.Logger;
+
 import static org.junit.Assert.*;
 
 @RunWith(value = Parameterized.class)
-public class BinaryDecoderTest {
-  byte[] bytes;
-  int start;
-  int len;
-  private BinaryDecoder decoder;
+public class BinaryDecoderIntegrationTest {
+  private byte[] bytes;
+  private int start;
+  private static ByteBuffer buf = ByteBuffer.allocate(10);
+  private int len;
+  private BinaryDecoder binaryDecoder;
 
-  public BinaryDecoderTest(byte[] bytes, int start, int len) {
+  public BinaryDecoderIntegrationTest(byte[] bytes, int start, int len) {
     this.bytes = bytes;
     this.start = start;
     this.len = len;
@@ -47,7 +48,7 @@ public class BinaryDecoderTest {
   @Before
   public void setUp() {
     try {
-      decoder = DecoderFactory.get().binaryDecoder(bytes, null);
+      binaryDecoder = DecoderFactory.get().binaryDecoder(bytes, null);
     } catch (NullPointerException e) {
       Assert.assertNull(bytes);
     }
@@ -56,23 +57,22 @@ public class BinaryDecoderTest {
   @Parameterized.Parameters
   public static Collection<Object[]> getParameters() {
     return Arrays.asList(new Object[][] {
-        // byte[], int, int
-        { "test".getBytes(), 1, 1 },
+        // byte[], int, int, Bytebuf
+        { "test".getBytes(), 1, 1},
         { "test".getBytes(), 1, 0 },
         {"test".getBytes(),0,1},
-        {"test".getBytes(), -1, 0}, //ArrayIndexOutOfBoundsException
-        {"test".getBytes(),-1,-1}, //ArrayIndexOutOfBoundsException
+        {"test".getBytes(), -1, 0},
+        {"test".getBytes(),-1,-1},
         { "".getBytes(), 0, 0 },
-        { "".getBytes(), 1, 0 }, //ArrayIndexOutOfBoundsException
-        {"".getBytes(),0,1}, //java.lang.ArrayIndexOutOfBoundsException: Array index out of range: 0
-        {"".getBytes(), -1, 0}, //java.lang.ArrayIndexOutOfBoundsException
-        {"".getBytes(),-1,-1}, //java.lang.ArrayIndexOutOfBoundsException
-        { null, 0, 0 }, //java.lang.NullPointerException: Cannot read the array length because "original" is null
-        { null, 1, 0 }, //stessa eccezione per tutti i null
+        { "".getBytes(), 1, 0 },
+        {"".getBytes(),0,1},
+        {"".getBytes(), -1, 0},
+        {"".getBytes(),-1,-1},
+        { null, 0, 0 },
+        { null, 1, 0 },
         {null,0,1},
         {null, -1, 0},
-        {null,-1,-1},
-
+        {null,-1,-1}
     });
   }
  /**
@@ -81,7 +81,7 @@ public class BinaryDecoderTest {
   @Test
   public void doReadBytes() {
     try {
-      decoder.doReadBytes(bytes, start, len);
+      binaryDecoder.doReadBytes(bytes, start, len);
     }catch (AvroRuntimeException e){
       Assert.assertTrue(len < 0);
     }
@@ -95,4 +95,47 @@ public class BinaryDecoderTest {
       Assert.assertTrue(start < 0 || start > bytes.length);
     }
   }
+
+  @Test
+  public void testReadBytes() {
+    try {
+      binaryDecoder.readBytes(buf);
+    } catch (IOException e) {
+      e.printStackTrace();
+    }
+  }
+  @Test
+  public void testReadFixed() {
+    try {
+      binaryDecoder.readFixed(buf.array(), start, buf.limit());
+    }  catch (IOException e) {
+      e.printStackTrace();
+    }
+  }
+
+  @Test
+  public void testSkipFixed() {
+    try {
+      binaryDecoder.skipFixed(buf.limit());
+    } catch (IOException e) {
+      e.printStackTrace();
+    }
+  }
+  @Test
+  public void testSkipBytes() {
+    try {
+      binaryDecoder.skipBytes();
+    } catch (IOException e) {
+      e.printStackTrace();
+    }
+  }
+  @Test
+  public void testSkipString() {
+    try {
+      binaryDecoder.skipString();
+    }  catch (IOException e) {
+      e.printStackTrace();
+    }
+  }
+
 }

@@ -126,7 +126,6 @@ class DirectBinaryDecoder extends BinaryDecoder {
       shift += 7;
     } while (shift < 32);
     throw new InvalidNumberEncodingException("Invalid int encoding");
-
   }
 
   @Override
