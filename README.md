@@ -70,3 +70,11 @@ To contribute to Avro, please read:
 [codeql java img]:       https://github.com/apache/avro/actions/workflows/codeql-java-analysis.yml/badge.svg
 [codeql javascript img]: https://github.com/apache/avro/actions/workflows/codeql-js-analysis.yml/badge.svg
 [codeql python img]:     https://github.com/apache/avro/actions/workflows/codeql-py-analysis.yml/badge.svg
+
+### Testing Documentation
+compile with the command without PIT:\
+```mvn clean org.jacoco:jacoco-maven-plugin:prepare-agent verify``` \
+```mvn clean -pl avro verify -Pba-dua-coverage``` \
+
+compile with the command with PIT:\
+```mvn clean -pl avro test -Pmutation-testing``` 

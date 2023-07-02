@@ -26,7 +26,8 @@ import org.apache.hadoop.mapred.Reporter;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-class TetherOutputService implements OutputProtocol {
+class TetherOutputService implements
+  OutputProtocol {
   private Reporter reporter;
   private OutputCollector<TetherData, NullWritable> collector;
   private int inputPort;

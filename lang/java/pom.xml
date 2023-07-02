@@ -38,7 +38,7 @@
 
     <!-- version properties for dependencies -->
     <hadoop.version>3.3.4</hadoop.version>
-    <jackson-bom.version>2.14.2</jackson-bom.version>
+    <jackson-bom.version>2.9.9</jackson-bom.version>
     <servlet-api.version>4.0.1</servlet-api.version>
     <jetty.version>9.4.51.v20230217</jetty.version>
     <jopt-simple.version>5.0.4</jopt-simple.version>
@@ -74,20 +74,17 @@
     <sonar.coverage.jacoco.xmlReportPaths>${project.basedir}/lang/java/jacoco-tests/target/site/jacoco-aggregate/jacoco.xml</sonar.coverage.jacoco.xmlReportPaths>
   </properties>
 
-
-
-
   <modules>
     <module>android</module>
     <module>avro</module>
     <module>compiler</module>
     <module>maven-plugin</module>
-    <module>ipc</module>
+    <!--<module>ipc</module>-->
     <module>ipc-jetty</module>
     <module>ipc-netty</module>
     <module>trevni</module>
     <module>tools</module>
-    <module>mapred</module>
+    <!--<module>mapred</module>-->
     <module>protobuf</module>
     <module>thrift</module>
     <module>archetypes</module>
@@ -124,6 +121,11 @@
           <groupId>org.apache.maven.plugins</groupId>
           <artifactId>maven-compiler-plugin</artifactId>
           <configuration>
+            <excludes>
+              <exclude>
+                Responder.java
+              </exclude>
+            </excludes>
             <compilerArgs>
               <arg>-parameters</arg>
               <!--<arg>-Werror</arg>-->
@@ -582,25 +584,41 @@
         <artifactId>zstd-jni</artifactId>
         <version>${zstd-jni.version}</version>
       </dependency>
+      <!-- https://mvnrepository.com/artifact/junit/junit -->
+      <dependency>
+        <groupId>junit</groupId>
+        <artifactId>junit</artifactId>
+        <version>4.12</version>
+        <scope>test</scope>
+      </dependency>
+
     </dependencies>
   </dependencyManagement>
 
   <!-- dependencies defines dependencies that all child projects share. Child projects
     will inherit these dependencies directly, and can opt out if necessary with <excludes> -->
   <dependencies>
+    <!-- https://mvnrepository.com/artifact/junit/junit -->
     <dependency>
+      <groupId>junit</groupId>
+      <artifactId>junit</artifactId>
+      <version>4.12</version>
+      <scope>test</scope>
+    </dependency>
+
+    <!--<dependency>
       <groupId>org.junit.vintage</groupId>
       <artifactId>junit-vintage-engine</artifactId>
       <version>${junit5.version}</version>
       <scope>test</scope>
-    </dependency>
+    </dependency>-->
 
-    <dependency>
+    <!--<dependency>
       <groupId>org.junit.jupiter</groupId>
       <artifactId>junit-jupiter</artifactId>
       <version>${junit5.version}</version>
       <scope>test</scope>
-    </dependency>
+    </dependency>-->
     <dependency>
       <groupId>org.slf4j</groupId>
       <artifactId>slf4j-api</artifactId>

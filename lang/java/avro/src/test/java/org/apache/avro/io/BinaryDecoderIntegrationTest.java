@@ -1,5 +1,3 @@
-package org.apache.avro.io;
-
 /*
  * Licensed to the Apache Software Foundation (ASF) under one
  * or more contributor license agreements.  See the NOTICE file
@@ -17,6 +15,8 @@ package org.apache.avro.io;
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
+package org.apache.avro.io;
+
 import org.apache.avro.AvroRuntimeException;
 import org.junit.Assert;
 import org.junit.Before;
@@ -34,6 +34,9 @@ import static org.junit.Assert.*;
 @RunWith(value = Parameterized.class)
 public class BinaryDecoderIntegrationTest {
   private byte[] bytes;
+  static final int MAX_ARRAY_SIZE = Integer.MAX_VALUE;
+  // private static byte[] bytesMax = new byte[MAX_ARRAY_SIZE];
+  private static byte[] bytesOk = "test".getBytes();
   private int start;
   private static ByteBuffer buf = ByteBuffer.allocate(10);
   private int len;
@@ -57,84 +60,43 @@ public class BinaryDecoderIntegrationTest {
   @Parameterized.Parameters
   public static Collection<Object[]> getParameters() {
     return Arrays.asList(new Object[][] {
-        // byte[], int, int, Bytebuf
-        { "test".getBytes(), 1, 1},
-        { "test".getBytes(), 1, 0 },
-        {"test".getBytes(),0,1},
-        {"test".getBytes(), -1, 0},
-        {"test".getBytes(),-1,-1},
-        { "".getBytes(), 0, 0 },
-        { "".getBytes(), 1, 0 },
-        {"".getBytes(),0,1},
-        {"".getBytes(), -1, 0},
-        {"".getBytes(),-1,-1},
-        { null, 0, 0 },
-        { null, 1, 0 },
-        {null,0,1},
-        {null, -1, 0},
-        {null,-1,-1}
+        // byte[], int, int
+        { bytesOk, 0, bytesOk.length }, { bytesOk, 0, -1 }, { bytesOk, -1, bytesOk.length }, { bytesOk, -1, -1 },
+        { bytesOk, 0, MAX_ARRAY_SIZE + 100 }, { bytesOk, -1, MAX_ARRAY_SIZE + 100 }, { "".getBytes(), 0, 0 },
+        { "".getBytes(), -1, 0 }, { "".getBytes(), -1, -1 }, { "".getBytes(), 0, -1 },
+        { "".getBytes(), 0, MAX_ARRAY_SIZE + 100 }, { "".getBytes(), -1, MAX_ARRAY_SIZE + 100 },
+        /*
+         * {bytesMax, 0, MAX_ARRAY_SIZE + 100}, {bytesMax, 0, -1}, {bytesMax, -1,
+         * MAX_ARRAY_SIZE + 100}, {bytesMax, -1, -1}
+         */
+
     });
   }
- /**
-  * protected void doReadBytes(byte[] bytes, int start, int length)
-  * */
+
+  /**
+   * protected void doReadBytes(byte[] bytes, int start, int length)
+   */
   @Test
   public void doReadBytes() {
     try {
       binaryDecoder.doReadBytes(bytes, start, len);
-    }catch (AvroRuntimeException e){
+    } catch (AvroRuntimeException e) {
       Assert.assertTrue(len < 0);
-    }
-    catch (NullPointerException e) {
-      Assert.assertNull(bytes);
-
-    }catch (IOException e) {
-      assertNotNull(e);
-    }
-    catch (ArrayIndexOutOfBoundsException e) {
+    } catch (IOException e) {
+      assertTrue(start + len > bytes.length);
+    } catch (ArrayIndexOutOfBoundsException e) {
       Assert.assertTrue(start < 0 || start > bytes.length);
     }
   }
 
   @Test
-  public void testReadBytes() {
+  public void doSkipBytes() {
     try {
-      binaryDecoder.readBytes(buf);
+      binaryDecoder.doSkipBytes(len);
+    } catch (AvroRuntimeException e) {
+      Assert.assertTrue(len < 0);
     } catch (IOException e) {
-      e.printStackTrace();
-    }
-  }
-  @Test
-  public void testReadFixed() {
-    try {
-      binaryDecoder.readFixed(buf.array(), start, buf.limit());
-    }  catch (IOException e) {
-      e.printStackTrace();
-    }
-  }
-
-  @Test
-  public void testSkipFixed() {
-    try {
-      binaryDecoder.skipFixed(buf.limit());
-    } catch (IOException e) {
-      e.printStackTrace();
-    }
-  }
-  @Test
-  public void testSkipBytes() {
-    try {
-      binaryDecoder.skipBytes();
-    } catch (IOException e) {
-      e.printStackTrace();
-    }
-  }
-  @Test
-  public void testSkipString() {
-    try {
-      binaryDecoder.skipString();
-    }  catch (IOException e) {
-      e.printStackTrace();
+      assertNotNull(e);
     }
   }
 

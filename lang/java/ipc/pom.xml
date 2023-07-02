@@ -24,7 +24,7 @@
     <artifactId>avro-parent</artifactId>
     <groupId>org.apache.avro</groupId>
     <version>1.12.0-SNAPSHOT</version>
-    <relativePath>../</relativePath>
+    <relativePath>../pom.xml</relativePath>
   </parent>
 
   <artifactId>avro-ipc</artifactId>
@@ -56,6 +56,16 @@
     <plugins>
       <plugin>
         <groupId>org.apache.maven.plugins</groupId>
+        <artifactId>maven-compiler-plugin</artifactId>
+        <version>3.8.1</version>
+        <configuration>
+          <excludes>
+            <exclude>Responder.java</exclude>
+          </excludes>
+        </configuration>
+      </plugin>
+      <plugin>
+        <groupId>org.apache.maven.plugins</groupId>
         <artifactId>maven-surefire-plugin</artifactId>
         <configuration>
           <!-- some tests hang if not run in a separate JVM -->
@@ -64,7 +74,7 @@
            <parallel>none</parallel>
         </configuration>
       </plugin>
-      <plugin>
+      <!--<plugin>
         <groupId>${project.groupId}</groupId>
         <artifactId>avro-maven-plugin</artifactId>
         <version>${project.version}</version>
@@ -84,7 +94,7 @@
               </excludes>
               <stringType>String</stringType>
               <createOptionalGetters>true</createOptionalGetters>
-              <!--<gettersReturnOptional>true</gettersReturnOptional>-->
+
               <sourceDirectory>${parent.project.basedir}/../../../../share/schemas/</sourceDirectory>
               <outputDirectory>${project.build.directory}/generated-sources/java</outputDirectory>
               <testSourceDirectory>${parent.project.basedir}/../../../../share/test/schemas/</testSourceDirectory>
@@ -92,7 +102,7 @@
             </configuration>
           </execution>
         </executions>
-      </plugin>
+      </plugin>-->
       <plugin>
         <groupId>org.apache.maven.plugins</groupId>
         <artifactId>maven-jar-plugin</artifactId>

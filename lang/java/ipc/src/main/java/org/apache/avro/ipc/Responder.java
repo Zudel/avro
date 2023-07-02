@@ -46,6 +46,7 @@ import org.apache.avro.io.Encoder;
 import org.apache.avro.io.EncoderFactory;
 import org.apache.avro.specific.SpecificDatumReader;
 import org.apache.avro.specific.SpecificDatumWriter;
+import sun.security.provider.MD5;
 
 /** Base class for the server side of a protocol interaction. */
 public abstract class Responder {
@@ -87,7 +88,7 @@ public abstract class Responder {
   /**
    * Adds a new plugin to manipulate per-call metadata. Plugins are executed in
    * the order that they are added.
-   * 
+   *
    * @param plugin a plugin that will manipulate RPC metadata
    */
   public void addRPCPlugin(RPCPlugin plugin) {

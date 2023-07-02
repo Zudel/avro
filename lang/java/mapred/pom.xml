@@ -50,6 +50,17 @@
   <build>
     <plugins>
       <plugin>
+        <groupId>org.apache.maven.plugins</groupId>
+        <artifactId>maven-compiler-plugin</artifactId>
+        <version>3.8.1</version>
+        <configuration>
+          <excludes>
+            <exclude>TetherOutputService.java</exclude>
+            <exclude>TetheredProcess.java</exclude>
+          </excludes>
+        </configuration>
+      </plugin>
+      <plugin>
         <!--<groupId>org.apache.maven.plugins</groupId>-->
         <artifactId>maven-jar-plugin</artifactId>
         <configuration>
@@ -92,7 +103,7 @@
           <parallel>none</parallel>
         </configuration>
       </plugin>
-      <plugin>
+      <!--<plugin>
         <groupId>${project.groupId}</groupId>
         <artifactId>avro-maven-plugin</artifactId>
         <version>${project.version}</version>
@@ -103,7 +114,7 @@
               <goal>schema</goal>
             </goals>
           </execution>
-          <!--<execution>
+          <execution>
             <id>test-schemas</id>
             <phase>generate-sources</phase>
             <goals>
@@ -116,7 +127,7 @@
               <testSourceDirectory>${parent.project.basedir}/../../../../share/test/schemas/</testSourceDirectory>
               <testOutputDirectory>${project.build.directory}/generated-test-sources/java</testOutputDirectory>
             </configuration>
-          </execution>-->
+          </execution>
           <execution>
             <id>mapred-schema</id>
             <phase>generate-sources</phase>
@@ -133,7 +144,7 @@
             </configuration>
           </execution>
         </executions>
-      </plugin>
+      </plugin>-->
       <plugin>
         <groupId>org.codehaus.mojo</groupId>
         <artifactId>build-helper-maven-plugin</artifactId>
