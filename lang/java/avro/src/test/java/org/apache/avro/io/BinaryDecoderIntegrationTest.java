@@ -30,24 +30,22 @@ import java.util.Arrays;
 import java.util.Collection;
 
 import static org.junit.Assert.*;
-
 @RunWith(value = Parameterized.class)
 public class BinaryDecoderIntegrationTest {
-  private byte[] bytes;
   static final int MAX_ARRAY_SIZE = Integer.MAX_VALUE;
   // private static byte[] bytesMax = new byte[MAX_ARRAY_SIZE];
   private static byte[] bytesOk = "test".getBytes();
+  private static byte[] bytesOk2 = "test3434324324322342".getBytes();
+  private static byte[] bytes;
   private int start;
   private static ByteBuffer buf = ByteBuffer.allocate(10);
   private int len;
   private BinaryDecoder binaryDecoder;
-
   public BinaryDecoderIntegrationTest(byte[] bytes, int start, int len) {
     this.bytes = bytes;
     this.start = start;
     this.len = len;
   }
-
   @Before
   public void setUp() {
     try {
@@ -56,7 +54,6 @@ public class BinaryDecoderIntegrationTest {
       Assert.assertNull(bytes);
     }
   }
-
   @Parameterized.Parameters
   public static Collection<Object[]> getParameters() {
     return Arrays.asList(new Object[][] {
@@ -65,14 +62,13 @@ public class BinaryDecoderIntegrationTest {
         { bytesOk, 0, MAX_ARRAY_SIZE + 100 }, { bytesOk, -1, MAX_ARRAY_SIZE + 100 }, { "".getBytes(), 0, 0 },
         { "".getBytes(), -1, 0 }, { "".getBytes(), -1, -1 }, { "".getBytes(), 0, -1 },
         { "".getBytes(), 0, MAX_ARRAY_SIZE + 100 }, { "".getBytes(), -1, MAX_ARRAY_SIZE + 100 },
-        /*
-         * {bytesMax, 0, MAX_ARRAY_SIZE + 100}, {bytesMax, 0, -1}, {bytesMax, -1,
-         * MAX_ARRAY_SIZE + 100}, {bytesMax, -1, -1}
-         */
 
-    });
+        // miglioramento
+        { bytesOk2, 0, bytesOk2.length }, { bytesOk2, 0, bytesOk2.length }, { bytesOk2, 0, MAX_ARRAY_SIZE + 100 },
+        { bytesOk2, -1, MAX_ARRAY_SIZE + 100 }, { bytesOk2, 0, bytesOk2.length - 2 },
+        { bytesOk2, 0, bytesOk2.length - 2 }, { bytesOk2, 2, bytesOk2.length - 2 },
+        { bytesOk2, 3, bytesOk2.length - 1 }, { new byte[100000000], 0, 100000000 } });
   }
-
   /**
    * protected void doReadBytes(byte[] bytes, int start, int length)
    */
@@ -85,10 +81,9 @@ public class BinaryDecoderIntegrationTest {
     } catch (IOException e) {
       assertTrue(start + len > bytes.length);
     } catch (ArrayIndexOutOfBoundsException e) {
-      Assert.assertTrue(start < 0 || start > bytes.length);
+      Assert.assertTrue(start < 0 || start > bytes.length || e.getMessage().contains("Array index out of range"));
     }
   }
-
   @Test
   public void doSkipBytes() {
     try {
@@ -99,5 +94,4 @@ public class BinaryDecoderIntegrationTest {
       assertNotNull(e);
     }
   }
-
 }
