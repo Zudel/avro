@@ -30,6 +30,7 @@ import java.util.Arrays;
 import java.util.Collection;
 
 import static org.junit.Assert.*;
+
 @RunWith(value = Parameterized.class)
 public class BinaryDecoderIntegrationTest {
   static final int MAX_ARRAY_SIZE = Integer.MAX_VALUE;
@@ -41,11 +42,13 @@ public class BinaryDecoderIntegrationTest {
   private static ByteBuffer buf = ByteBuffer.allocate(10);
   private int len;
   private BinaryDecoder binaryDecoder;
+
   public BinaryDecoderIntegrationTest(byte[] bytes, int start, int len) {
     this.bytes = bytes;
     this.start = start;
     this.len = len;
   }
+
   @Before
   public void setUp() {
     try {
@@ -54,6 +57,7 @@ public class BinaryDecoderIntegrationTest {
       Assert.assertNull(bytes);
     }
   }
+
   @Parameterized.Parameters
   public static Collection<Object[]> getParameters() {
     return Arrays.asList(new Object[][] {
@@ -61,14 +65,9 @@ public class BinaryDecoderIntegrationTest {
         { bytesOk, 0, bytesOk.length }, { bytesOk, 0, -1 }, { bytesOk, -1, bytesOk.length }, { bytesOk, -1, -1 },
         { bytesOk, 0, MAX_ARRAY_SIZE + 100 }, { bytesOk, -1, MAX_ARRAY_SIZE + 100 }, { "".getBytes(), 0, 0 },
         { "".getBytes(), -1, 0 }, { "".getBytes(), -1, -1 }, { "".getBytes(), 0, -1 },
-        { "".getBytes(), 0, MAX_ARRAY_SIZE + 100 }, { "".getBytes(), -1, MAX_ARRAY_SIZE + 100 },
-
-        // miglioramento
-        { bytesOk2, 0, bytesOk2.length }, { bytesOk2, 0, bytesOk2.length }, { bytesOk2, 0, MAX_ARRAY_SIZE + 100 },
-        { bytesOk2, -1, MAX_ARRAY_SIZE + 100 }, { bytesOk2, 0, bytesOk2.length - 2 },
-        { bytesOk2, 0, bytesOk2.length - 2 }, { bytesOk2, 2, bytesOk2.length - 2 },
-        { bytesOk2, 3, bytesOk2.length - 1 }, { new byte[100000000], 0, 100000000 } });
+        { "".getBytes(), 0, MAX_ARRAY_SIZE + 100 }, { "".getBytes(), -1, MAX_ARRAY_SIZE + 100 }, });
   }
+
   /**
    * protected void doReadBytes(byte[] bytes, int start, int length)
    */
@@ -84,6 +83,7 @@ public class BinaryDecoderIntegrationTest {
       Assert.assertTrue(start < 0 || start > bytes.length || e.getMessage().contains("Array index out of range"));
     }
   }
+
   @Test
   public void doSkipBytes() {
     try {

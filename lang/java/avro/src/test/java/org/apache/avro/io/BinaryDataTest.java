@@ -54,6 +54,7 @@ public class BinaryDataTest {
     this.lenArray = lenArray;
     this.schema = schema;
   }
+
   @Parameterized.Parameters
   public static Collection<Object[]> getParameters() {
     return Arrays
